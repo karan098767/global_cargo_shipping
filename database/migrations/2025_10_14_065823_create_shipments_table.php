@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             // Foreign key relationships
-            $table->foreignId('cargo_id')->nullable()->constrained('cargo')->nullOnDelete();
+            $table->foreignId('cargo_id')->nullable()->constrained('cargos')->nullOnDelete();
             $table->foreignId('ship_id')->nullable()->constrained('ships')->nullOnDelete();
             $table->foreignId('origin_port_id')->nullable()->constrained('ports')->nullOnDelete();
             $table->foreignId('destination_port_id')->nullable()->constrained('ports')->nullOnDelete();

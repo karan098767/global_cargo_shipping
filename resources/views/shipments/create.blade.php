@@ -34,6 +34,10 @@
         <label>Destination:</label><br>
         <input type="text" name="destination" required><br><br>
 
+
+
+
+
         <label>Weight (kg):</label><br>
         <input type="number" name="weight" step="0.1" required><br><br>
 
@@ -51,3 +55,4 @@
     <a href="{{ route('shipments.index') }}">⬅ Back to Shipments</a>
 </body>
 </html>
+                                                                                                                                                                                                                                                                        

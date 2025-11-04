@@ -11,12 +11,15 @@ class Ship extends Model
 
 
     protected $fillable = [
-      'tracking_number',
-        'sender_name',
-        'receiver_name',
-        'origin',
-        'destination',
-        'weight',
-        'status',
+      'name',
+       'registration_number',
+       'capacity_in_tonnes',
+       'type',
+       'status',
     ];
+    public function crew()
+    {
+        return $this->belongsTo(Crew::class, 'ship_id');
+    }
 }
+                      
