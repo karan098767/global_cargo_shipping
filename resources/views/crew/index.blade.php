@@ -1,33 +1,35 @@
 @extends('layouts.app')
 
 @section('content')
-<h1>👨‍✈️ Crew Members</h1>
-<a href="{{ route('crew.create') }}">Add Crew Member</a>
-
-<table border="1" cellpadding="8">
-    <tr>
-        <th>Name</th>
-        <th>Role</th>
-        <th>Ship</th>
-        <th>Nationality</th>
-        <th>Actions</th>
-    </tr>
-
-    @foreach($crew as $member)
-    <tr>
-        <td>{{ $member->first_name }} {{ $member->last_name }}</td>
-        <td>{{ $member->role }}</td>
-        <td>{{ $member->ship ? $member->ship->name : 'Unassigned' }}</td>
-        <td>{{ $member->nationality ?? 'N/A' }}</td>
-        <td>
-            <a href="{{ route('crew.edit', $member->id) }}">Edit</a>
-            <form action="{{ route('crew.destroy', $member->id) }}" method="POST" style="display:inline;">
-                @csrf
-                @method('DELETE')
-                <button type="submit">Deactivate</button>
-            </form>
-        </td>
-    </tr>
-    @endforeach
+<h2>Crew Members</h2>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Ship</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Phone</th>
+            <th>Nationality</th>
+            <th>Active</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse($crew as $member)
+        <tr>
+            <td>{{ $member->id }}</td>
+            <td>{{ $member->ship->name ?? '-' }}</td>
+            <td>{{ $member->first_name }} {{ $member->last_name }}</td>
+            <td>{{ $member->role }}</td>
+            <td>{{ $member->phone_number }}</td>
+            <td>{{ $member->nationality }}</td>
+            <td>{{ $member->is_active ? 'Yes' : 'No' }}</td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="7" class="text-center">No crew members found</td>
+        </tr>
+        @endforelse
+    </tbody>
 </table>
 @endsection

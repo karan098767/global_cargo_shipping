@@ -1,52 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Shipments Dashboard</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f8f9fa; padding: 20px; }
-        h1 { color: #333; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
-        th { background: #007bff; color: white; }
-        tr:nth-child(even) { background: #f2f2f2; }
-        .status { text-transform: capitalize; }
-    </style>
-</head>
-<body>
-    <h1>🚢 Shipments Management Dashboard</h1>
+@extends('layouts.app')
 
-    @if(session('success'))
-        <p style="color: green;">{{ session('success') }}</p>
-    @endif
+@section('content')
+<h2>Shipments</h2>
 
-    @if(count($shipments) > 0)
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Tracking #</th>
-                <th>Sender</th>
-                <th>Receiver</th>
-                <th>Origin</th>
-                <th>Destination</th>
-                <th>Weight (kg)</th>
-                <th>Status</th>
-            </tr>
-            @foreach ($shipments as $shipment)
-            <tr>
-                <td>{{ $shipment->id }}</td>
-                <td>{{ $shipment->tracking_number }}</td>
-                <td>{{ $shipment->sender_name }}</td>
-                <td>{{ $shipment->receiver_name }}</td>
-                <td>{{ $shipment->origin }}</td>
-                <td>{{ $shipment->destination }}</td>
-                <td>{{ $shipment->weight }}</td>
-                <td class="status">{{ $shipment->status }}</td>
-            </tr>
-            @endforeach
-        </table>
-    @else
-        <p>No shipments found.</p>
-    @endif
-</body>
-</html>
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Cargo</th>
+            <th>Ship</th>
+            <th>Origin Port</th>
+            <th>Destination Port</th>
+            <th>Departure</th>
+            <th>Arrival Estimate</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse($shipments as $shipment)
+        <tr>
+            <td>{{ $shipment->id }}</td>
+            <td>{{ $shipment->cargo->cargo_name ?? '-' }}</td>
+            <td>{{ $shipment->ship->name ?? '-' }}</td>
+            <td>{{ $shipment->originPort->name ?? '-' }}</td>
+            <td>{{ $shipment->destinationPort->name ?? '-' }}</td>
+            <td>{{ $shipment->departure_date }}</td>
+            <td>{{ $shipment->arrival_estimate }}</td>
+            <td>
+                @php
+                    $statusClass = match($shipment->status) {
+                        'pending' => 'badge bg-warning',
+                        'in_transit' => 'badge bg-info',
+                        'delivered' => 'badge bg-success',
+                        'delayed' => 'badge bg-danger',
+                        default => 'badge bg-secondary'
+                    };
+                @endphp
+                <span class="{{ $statusClass }}">{{ ucfirst($shipment->status) }}</span>
+            </td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="8" class="text-center">No shipments found</td>
+        </tr>
+        @endforelse
+    </tbody>
+</table>
+@endsection

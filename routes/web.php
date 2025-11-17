@@ -7,6 +7,7 @@ use App\Http\Controllers\CrewController;
 use App\Http\Controllers\CargoController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\PortController;
+use App\Http\Controllers\DashboardController;
 
 
 
@@ -23,4 +24,5 @@ Route::resource('crew', CrewController::class);
 Route::resource('cargos', CargoController::class);
 Route::resource('clients',ClientController::class);
 Route::resource('ports', PortController::class);
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
             

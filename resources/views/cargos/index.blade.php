@@ -1,49 +1,53 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>Cargo List</h1>
-
-    <a href="{{ route('cargos.create') }}" class="btn btn-primary mb-3">+ Add New Cargo</a>
-
-    @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
-    @endif
-
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Cargo Name</th>
-                <th>Tracking Number</th>
-                <th>Weight (kg)</th>
-                <th>Origin</th>
-                <th>Destination</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($cargos as $cargo)
-            <tr>
-                <td>{{ $cargo->id }}</td>
-                <td>{{ $cargo->cargo_name }}</td>
-                <td>{{ $cargo->tracking_number }}</td>
-                <td>{{ $cargo->weight }}</td>
-                <td>{{ $cargo->origin_port }}</td>
-                <td>{{ $cargo->destination_port }}</td>
-                <td>{{ $cargo->status }}</td>
-                <td>
-                    <a href="{{ route('cargos.edit', $cargo) }}" class="btn btn-warning btn-sm">Edit</a>
-                    <form action="{{ route('cargos.destroy', $cargo) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Deactivate this cargo?')">Deactivate</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Cargos</h2>
+    <a href="{{ route('cargos.create') }}" class="btn btn-primary">Add Cargo</a>
 </div>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Cargo Name</th>
+            <th>Tracking #</th>
+            <th>Weight (kg)</th>
+            <th>Origin Port</th>
+            <th>Destination Port</th>
+            <th>Status</th>
+            <th>Active</th>
+            <th>Created At</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse($cargos as $cargo)
+        <tr>
+            <td>{{ $cargo->id }}</td>
+            <td>{{ $cargo->cargo_name }}</td>
+            <td>{{ $cargo->tracking_number }}</td>
+            <td>{{ $cargo->weight }}</td>
+            <td>{{ $cargo->origin_port }}</td>
+            <td>{{ $cargo->destination_port }}</td>
+            <td>
+                @php
+                    $statusClass = match($cargo->status) {
+                        'Pending' => 'badge bg-warning',
+                        'In Transit' => 'badge bg-info',
+                        'Delivered' => 'badge bg-success',
+                        default => 'badge bg-secondary'
+                    };
+                @endphp
+                <span class="{{ $statusClass }}">{{ $cargo->status }}</span>
+            </td>
+            <td>{{ $cargo->is_active ? 'Yes' : 'No' }}</td>
+            <td>{{ $cargo->created_at?->format('d M Y') }}</td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="9" class="text-center">No cargos found</td>
+        </tr>
+        @endforelse
+    </tbody>
+</table>
 @endsection

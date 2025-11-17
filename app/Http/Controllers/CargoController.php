@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 
 class CargoController extends Controller
 {
-    public function index()
-    {
-        $cargos = Cargo::where('is_active', true)->get();
-        return view('cargos.index', compact('cargos'));
-    }
+   public function index()
+{
+    $cargos = Cargo::orderBy('id', 'desc')->get();
+    return view('cargos.index', compact('cargos'));
+}
+
+
 
     public function create()
     {
